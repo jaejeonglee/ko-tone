@@ -1,0 +1,149 @@
+<!doctype html>
+<!--
+  README 배너 원본. hero.png는 이 파일을 1200×400, 2배 해상도로 렌더링한 결과다.
+  다시 만들 때: node assets/readme/render.js
+  디자인 의도: 원고지 위 빨간 펜 교정 부호. 그라데이션, 반짝이 아이콘, 로봇 같은 'AI 느낌' 장식은 쓰지 않는다.
+-->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Nanum+Pen+Script&family=IBM+Plex+Mono:wght@400;500&display=block" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F6F3EC;
+    --sheet: #FFFDF8;
+    --ink: #22201C;
+    --ink-2: #4A4640;
+    --ink-3: #8F897F;
+    --rule: #DCD5C8;
+    --grid: #E3C5BA;      /* 원고지 칸선: 흐린 적갈색 */
+    --pen: #C8412B;       /* 교정용 빨간 펜 */
+    --cell: 38px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1200px; height: 400px; background: transparent; }
+  .banner {
+    position: relative; width: 1200px; height: 400px; overflow: hidden;
+    background: var(--paper); border-radius: 22px;
+    font-family: "Noto Sans KR", sans-serif; color: var(--ink);
+  }
+  .mono { font-family: "IBM Plex Mono", "Noto Sans KR", monospace; letter-spacing: 0.06em; }
+
+  /* 왼쪽: 이름과 한 줄 설명 */
+  .left { position: absolute; left: 60px; top: 54px; width: 470px; }
+  .label { font-size: 15px; color: var(--ink-3); }
+  .title { margin-top: 26px; font-size: 84px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  .desc { margin-top: 24px; font-size: 25px; line-height: 1.55; color: var(--ink-2); font-weight: 400; }
+  .foot { position: absolute; left: 60px; bottom: 40px; font-size: 14px; color: var(--ink-3); }
+  .divider-v { position: absolute; left: 560px; top: 48px; bottom: 48px; border-left: 1px solid var(--rule); }
+
+  /* 오른쪽: 원고지 */
+  .right { position: absolute; left: 604px; top: 54px; }
+  .right .label { margin-bottom: 18px; }
+  .sheet { position: relative; background: var(--sheet); border: 1px solid var(--rule); padding: 16px 18px 14px; width: 540px; }
+  .row { display: flex; height: var(--cell); }
+  .row + .row { margin-top: 12px; }        /* 원고지 줄 사이 좁은 여백 */
+  .c {
+    width: var(--cell); height: var(--cell); border: 1px solid var(--grid); margin-left: -1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 23px; color: var(--ink); font-weight: 400;
+  }
+  .c:first-child { margin-left: 0; }
+  .c.p { justify-content: flex-start; padding-left: 6px; }   /* 마침표는 칸 왼쪽 아래 */
+  .c.p span { transform: translateY(6px); }
+  .ink-pen { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+  .note {
+    position: absolute; font-family: "Nanum Pen Script", cursive; color: var(--pen);
+    font-size: 30px; line-height: 1; white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="left">
+    <div class="label mono">AGENT SKILL · 한국어 문체</div>
+    <div class="title">ko-tone</div>
+    <div class="desc">AI가 쓴 한국어 글을<br>읽는 사람과 상황에 맞게 고칩니다</div>
+  </div>
+  <div class="foot mono">oil-tone 한국어판 · MIT</div>
+  <div class="foot mono" style="left:604px">번역투 · 빈말 · 높임 수준 · 과잉 교정</div>
+  <div class="divider-v"></div>
+
+  <div class="right">
+    <div class="label mono">교정 원고</div>
+    <div class="sheet" id="sheet">
+      <!-- 1행: '를 진행'을 지우면 '검토했습니다.' -->
+      <div class="row" id="r1"></div>
+      <!-- 2행: 내용 없는 결말은 통째로 삭제 -->
+      <div class="row" id="r2"></div>
+      <!-- 3~4행: 빈 칸 -->
+      <div class="row" id="r3"></div>
+      <div class="row" id="r4"></div>
+      <svg class="ink-pen" id="pen" width="540" height="260"></svg>
+      <div class="note" id="n1">번역투</div>
+      <div class="note" id="n2">빈말</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 원고지 칸 채우기: 한 칸에 한 글자, 띄어쓰기도 한 칸을 차지한다.
+  const COLS = 12;
+  const rows = { r1: "검토를 진행했습니다.", r2: "앞으로가 기대됩니다.", r3: "", r4: "" };
+  for (const [id, text] of Object.entries(rows)) {
+    const row = document.getElementById(id);
+    const chars = [...text];
+    for (let i = 0; i < COLS; i++) {
+      const ch = chars[i] ?? "";
+      const cell = document.createElement("div");
+      cell.className = "c" + (ch === "." ? " p" : "");
+      cell.innerHTML = ch === " " ? "" : `<span>${ch}</span>`;
+      row.appendChild(cell);
+    }
+  }
+
+  // 빨간 펜 교정 부호: 칸 좌표를 읽어 손으로 그은 듯 약간 흔들리는 선을 그린다.
+  const sheet = document.getElementById("sheet");
+  const pen = document.getElementById("pen");
+  const box = sheet.getBoundingClientRect();
+  const cellRect = (rowId, i) => {
+    const r = document.getElementById(rowId).children[i].getBoundingClientRect();
+    return { x: r.left - box.left, y: r.top - box.top, w: r.width, h: r.height };
+  };
+  const path = (d) => {
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", d);
+    p.setAttribute("fill", "none");
+    p.setAttribute("stroke", "#C8412B");
+    p.setAttribute("stroke-width", "2.6");
+    p.setAttribute("stroke-linecap", "round");
+    p.setAttribute("stroke-linejoin", "round");
+    pen.appendChild(p);
+  };
+  // 삭제 부호: 글자 위로 줄을 긋고, 끝에서 위로 돼지꼬리처럼 말아 올린다.
+  const strike = (rowId, from, to, wobble) => {
+    const a = cellRect(rowId, from), b = cellRect(rowId, to);
+    const y = a.y + a.h * 0.52;
+    const x1 = a.x + 4, x2 = b.x + b.w - 6;
+    const mid = (x1 + x2) / 2;
+    path(`M${x1} ${y + 1} Q${mid} ${y - wobble} ${x2} ${y - 1}`);
+    // 꼬리: 오른쪽 끝에서 위로 작은 고리
+    path(`M${x2} ${y - 1} c 6 -2, 10 -10, 6 -16 c -4 -5, -11 0, -6 6 c 3 3, 8 2, 12 -2`);
+  };
+  strike("r1", 2, 5, 3);   // '를', ' ', '진', '행'
+  strike("r2", 0, 10, 4);  // 한 줄 전체
+
+  // 여백 메모: 줄 오른쪽 끝 바깥에 둔다.
+  const place = (noteId, rowId, dy) => {
+    const last = cellRect(rowId, COLS - 1);
+    const n = document.getElementById(noteId);
+    n.style.left = (last.x + last.w + 12) + "px";
+    n.style.top = (last.y + dy) + "px";
+  };
+  place("n1", "r1", 4);
+  place("n2", "r2", 4);
+</script>
+</body>
+</html>
