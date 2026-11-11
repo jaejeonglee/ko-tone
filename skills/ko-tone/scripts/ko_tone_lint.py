@@ -27,6 +27,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+if sys.version_info < (3, 9):  # 아래 타입 표기(tuple[...])가 3.9부터 동작한다
+    sys.exit("Python 3.9 이상이 필요합니다.")
+
 Rule = tuple[re.Pattern[str], str]
 Hint = tuple[int, str, str]  # (줄 번호, 해당 텍스트, 안내 문구)
 
@@ -173,6 +176,9 @@ def prose_sentences(lines: list[tuple[int, str]]) -> list[tuple[int, str]]:
 def speech_level(sentence: str) -> str | None:
     """문장 끝 어미로 높임 수준을 분류한다. 분류할 수 없으면 None."""
     tail = sentence.rstrip(TRAILING)
+    # '~해 주세요', '~하세요' 같은 요청은 합쇼체 공지에서도 흔히 섞어 쓰므로 어느 쪽에도 세지 않는다.
+    if re.search(r"세요$", tail):
+        return None
     if re.search(r"(?:니다|니까|십시오|시오)$", tail):  # -습니다/-ㅂ니다/-습니까
         return "합쇼체"
     if re.search(r"(?:(?<!필)요|죠)$", tail):  # -요/-죠 ('필요'로 끝나는 개조식은 제외)
@@ -278,13 +284,16 @@ def self_test() -> int:
             failures.append(f"오탐: {line}")
 
     # 문서 단위
-    mixed = "배포는 금요일입니다. 롤백 절차는 아래 문서를 봐 주세요. 담당자는 운영팀이다. 모니터링은 주말까지 이어집니다. 문제가 생기면 바로 알려 주세요."
+    mixed = "배포는 금요일입니다. 롤백 절차는 아래 문서에 있어요. 담당자는 운영팀이에요. 모니터링은 주말까지 이어집니다."
     uniform = "배포는 금요일입니다. 롤백 절차는 아래 문서에 있습니다. 담당자는 운영팀입니다."
+    polite_requests = "배포는 금요일입니다. 롤백 절차는 문서를 참고해 주세요. 담당자는 운영팀입니다. 문제가 생기면 알려 주세요."
     repeated = "지갑을 연결할 수 있습니다. 토큰을 스왑할 수 있습니다. 거래 내역을 확인할 수 있습니다."
     if not find_mixed_levels(prose_sentences(visible_lines(mixed))):
         failures.append("놓침: 높임 수준 혼용")
     if find_mixed_levels(prose_sentences(visible_lines(uniform))):
         failures.append("오탐: 높임 수준 통일된 글")
+    if find_mixed_levels(prose_sentences(visible_lines(polite_requests))):
+        failures.append("오탐: 합쇼체 글 속 '~주세요' 요청")
     if not find_repeated_endings(prose_sentences(visible_lines(repeated))):
         failures.append("놓침: 같은 종결 반복")
     if find_repeated_endings(prose_sentences(visible_lines(uniform))):
@@ -295,7 +304,7 @@ def self_test() -> int:
         for failure in failures:
             print(f"      {failure}")
         return 1
-    print(f"PASS  ko-tone lint self-test ({len(bad_lines)} bad / {len(good_lines)} good / 4 document checks)")
+    print(f"PASS  ko-tone lint self-test ({len(bad_lines)} bad / {len(good_lines)} good / 5 document checks)")
     return 0
 
 
