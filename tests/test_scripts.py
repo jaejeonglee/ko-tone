@@ -16,6 +16,7 @@ from pathlib import Path
 SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "ko-tone" / "scripts"
 LINT = SCRIPTS / "ko_tone_lint.py"
 COMPARE = SCRIPTS / "ko_tone_compare.py"
+FACTS = SCRIPTS / "ko_tone_facts.py"
 
 AI_DRAFT = """## 계정 추상화: 지갑 경험의 새로운 패러다임
 
@@ -126,6 +127,41 @@ class CompareTest(TempFiles):
     def test_usage_error(self) -> None:
         result = run(COMPARE)
         self.assertEqual(result.returncode, 2)
+
+
+
+class FactsTest(TempFiles):
+    def test_self_test(self) -> None:
+        result = run(FACTS, "--self-test")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_weekday_and_timezone(self) -> None:
+        self.assertEqual(run(FACTS, "weekday", "2026-12-02").stdout.strip(), "2026년 12월 2일(수)")
+        out = run(FACTS, "tz", "2026-12-31 23:59", "--from", "UTC", "--to", "KST").stdout
+        self.assertIn("2027년 1월 1일(금) 08:59 KST", out)
+
+    def test_pct_and_numbers(self) -> None:
+        self.assertTrue(run(FACTS, "pct", "1,240,000", "780,000").stdout.startswith("37.1% 감소"))
+        self.assertIn("(1억 2,345만 6,789)", run(FACTS, "num", "123456789").stdout)
+        self.assertEqual(run(FACTS, "units", "1500000000000000000", "--decimals", "18").stdout.strip(), "1.5")
+
+    def test_address_checksum(self) -> None:
+        good = run(FACTS, "addr", "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed")
+        self.assertEqual(good.returncode, 0)
+        bad = run(FACTS, "addr", "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAeD")
+        self.assertEqual(bad.returncode, 1)
+        self.assertIn("체크섬이 맞지 않습니다", bad.stdout)
+        lower = run(FACTS, "addr", "0x5aaeb6053f3e94c9b9a09f33669435e7ef1beaed")
+        self.assertEqual(lower.returncode, 0)
+        self.assertIn("0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed", lower.stdout)
+
+    def test_check_finds_wrong_weekday_and_bad_address(self) -> None:
+        text = "2026년 공지\n- 일시: 12월 2일(목) 19:00 KST\n- 주소: 0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAeD\n- 다음 점검: 12월 9일(수)\n"
+        result = run(FACTS, "check", self.write("notice.md", text))
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("실제 요일은 (수)", result.stdout)
+        self.assertIn("체크섬이 맞지 않습니다", result.stdout)
+        self.assertIn("12월 9일(수): 2026년 기준 요일이 맞습니다", result.stdout)
 
 
 if __name__ == "__main__":
