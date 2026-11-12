@@ -12,6 +12,8 @@ oil-tone(https://github.com/oil-oil/oil-tone, MIT)의 tone_lint.py 구조
 3. 문서 단위 점검: 제목·목록·표·인용을 뺀 본문 문장만 모아
    - 문장 끝 어미로 높임 수준(합쇼체/해요체/평어체)을 분류해 두 가지 이상이 섞였는지,
    - 같은 종결(끝 6글자)이 3문장 이상 연달아 나오는지 본다.
+4. 사용자 규칙(ko_tone_rules.py): 활성 avoid 규칙에 걸리는 줄을 경고하고,
+   활성 keep 규칙으로 정한 표현에만 걸린 기본 경고는 내지 않는다. --no-user-rules로 끌 수 있다.
 
 경고는 '다시 볼 후보'일 뿐이며 고칠지는 문맥을 보고 정한다.
 그래서 종료 코드는 항상 0이다(--self-test 실패 시에만 1).
@@ -144,11 +146,14 @@ def visible_lines(text: str) -> list[tuple[int, str]]:
 
 
 # ── 줄 단위 점검 ─────────────────────────────────────────────
-def find_line_hints(lines: list[tuple[int, str]]) -> list[Hint]:
+def find_line_hints(lines: list[tuple[int, str]], keep: tuple[re.Pattern[str], ...] = ()) -> list[Hint]:
     hints: list[Hint] = []
     for line_number, line in lines:
+        # 사용자가 '고치지 말 표현(keep)'으로 정한 구간. 기본 규칙이 이 구간에만 걸렸다면 경고하지 않는다.
+        kept = [m.span() for k in keep for m in k.finditer(line)]
         for pattern, fix in LINE_RULES:
-            if pattern.search(line):
+            spans = [m.span() for m in pattern.finditer(line)]
+            if spans and not all(any(start < k_end and k_start < end for k_start, k_end in kept) for start, end in spans):
                 hints.append((line_number, line, fix))
     return hints
 
@@ -223,11 +228,29 @@ def find_repeated_endings(sentences: list[tuple[int, str]], run_length: int = 3)
     return hints
 
 
-def find_hints(text: str) -> list[Hint]:
+def find_hints(text: str, avoid: tuple[Rule, ...] = (), keep: tuple[re.Pattern[str], ...] = ()) -> list[Hint]:
     lines = visible_lines(text)
     sentences = prose_sentences(lines)
-    hints = find_line_hints(lines) + find_mixed_levels(sentences) + find_repeated_endings(sentences)
+    hints = find_line_hints(lines, keep) + find_mixed_levels(sentences) + find_repeated_endings(sentences)
+    for line_number, line in lines:  # 사용자 피드백으로 쌓인 활성 avoid 규칙
+        for pattern, fix in avoid:
+            if pattern.search(line):
+                hints.append((line_number, line, fix))
     return sorted(hints, key=lambda hint: hint[0])
+
+
+def load_user_rules(scope: str | None = None) -> tuple[tuple[Rule, ...], tuple[re.Pattern[str], ...]]:
+    """ko_tone_rules.py에서 활성 (avoid 규칙, keep 패턴)을 불러온다.
+    규칙 파일이 없으면 빈 목록이고, 깨졌으면 알리고 기본 규칙만 쓴다."""
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("ko_tone_rules", Path(__file__).with_name("ko_tone_rules.py"))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return tuple(module.lint_patterns(scope)), tuple(module.keep_patterns(scope))
+    except Exception as exc:  # 사용자 규칙 문제로 기본 검사가 멈추지 않게 한다
+        print(f"NOTE  사용자 규칙을 읽지 못해 기본 규칙만 씁니다: {exc}", file=sys.stderr)
+        return (), ()
 
 
 # ── 자체 테스트 ──────────────────────────────────────────────
@@ -312,14 +335,18 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="한국어 원고에서 다시 볼 표현 후보를 찾습니다.")
     parser.add_argument("files", nargs="*", help="검사할 UTF-8 파일, 표준 입력은 -")
     parser.add_argument("--self-test", action="store_true", help="규칙 자체 테스트 실행")
+    parser.add_argument("--no-user-rules", action="store_true", help="사용자 피드백 규칙 없이 기본 규칙만 쓰기")
+    parser.add_argument("--scope", choices=("email", "chat", "blog", "translation", "talk", "sns", "intro", "ui"),
+                        help="사용자 규칙 중 이 글 종류와 '모든 글' 규칙만 쓰기")
     args = parser.parse_args()
     if args.self_test:
         return self_test()
     if not args.files:
         parser.error("파일을 하나 이상 주거나 --self-test를 쓰세요")
+    avoid, keep = ((), ()) if args.no_user_rules else load_user_rules(args.scope)
     total = 0
     for name in args.files:
-        for line_number, line, fix in find_hints(read_text(name)):
+        for line_number, line, fix in find_hints(read_text(name), avoid, keep):
             print(f"WARN  {name}:{line_number}: {line}\n      {fix}")
             total += 1
     if total:

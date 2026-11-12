@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -17,6 +19,7 @@ SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "ko-tone" / "scripts"
 LINT = SCRIPTS / "ko_tone_lint.py"
 COMPARE = SCRIPTS / "ko_tone_compare.py"
 FACTS = SCRIPTS / "ko_tone_facts.py"
+RULES = SCRIPTS / "ko_tone_rules.py"
 
 AI_DRAFT = """## 계정 추상화: 지갑 경험의 새로운 패러다임
 
@@ -42,10 +45,21 @@ cast send $ENTRYPOINT "handleOps(...)"
 """
 
 
-def run(script: Path, *args: str) -> subprocess.CompletedProcess[str]:
+# 실제 사용자 규칙(~/.config/ko-tone, 저장소의 .ko-tone)이 테스트 결과를 바꾸지 않도록
+# 모든 실행을 빈 임시 폴더(KO_TONE_HOME, 작업 폴더)에 가둔다.
+_SANDBOX = tempfile.TemporaryDirectory()
+SANDBOX = Path(_SANDBOX.name)
+
+
+def tearDownModule() -> None:
+    _SANDBOX.cleanup()
+
+
+def run(script: Path, *args: str, home: Path | None = None, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
+    env = {**os.environ, "KO_TONE_HOME": str(home or SANDBOX / "home")}
     return subprocess.run(
         [sys.executable, str(script), *args],
-        capture_output=True, text=True, encoding="utf-8", check=False,
+        capture_output=True, text=True, encoding="utf-8", check=False, env=env, cwd=str(cwd or SANDBOX),
     )
 
 
@@ -129,7 +143,6 @@ class CompareTest(TempFiles):
         self.assertEqual(result.returncode, 2)
 
 
-
 class FactsTest(TempFiles):
     def test_self_test(self) -> None:
         result = run(FACTS, "--self-test")
@@ -162,6 +175,56 @@ class FactsTest(TempFiles):
         self.assertIn("실제 요일은 (수)", result.stdout)
         self.assertIn("체크섬이 맞지 않습니다", result.stdout)
         self.assertIn("12월 9일(수): 2026년 기준 요일이 맞습니다", result.stdout)
+
+
+class RulesTest(TempFiles):
+    """피드백 → 후보 → 활성 승격 → lint 적용 → 보관 흐름을 명령줄로 확인한다."""
+
+    def rules(self, *args: str, cwd: Path | None = None) -> subprocess.CompletedProcess[str]:
+        return run(RULES, *args, home=self.dir / "home", cwd=cwd or self.dir)
+
+    def lint(self, *args: str) -> str:
+        return run(LINT, *args, home=self.dir / "home", cwd=self.dir).stdout
+
+    def test_self_test(self) -> None:
+        result = run(RULES, "--self-test")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_feedback_becomes_active_on_repeat(self) -> None:
+        first = self.rules("add", "avoid", "말씀드리겠습니다", "--suggest", "말씀드릴게요", "--scope", "chat")
+        self.assertIn("후보로 저장", first.stdout)
+        draft = self.write("chat.md", "내일 다시 말씀드리겠습니다.\n")
+        self.assertNotIn("사용자 규칙", self.lint(draft))  # 후보는 아직 적용하지 않는다
+        rid = first.stdout.split(": ", 1)[1].split()[0]
+        second = self.rules("hit", rid)
+        self.assertIn("활성 규칙으로 올림", second.stdout)
+        self.assertIn(f"사용자 규칙 {rid}", self.lint("--scope", "chat", draft))
+        self.assertNotIn("사용자 규칙", self.lint("--scope", "email", draft))  # 다른 글 종류에는 적용하지 않는다
+        self.assertNotIn("사용자 규칙", self.lint("--no-user-rules", draft))
+        self.rules("retire", rid)
+        self.assertNotIn("사용자 규칙", self.lint(draft))
+
+    def test_keep_rule_silences_only_its_own_span(self) -> None:
+        self.rules("add", "keep", "혁신적인", "--note", "회사 슬로건", "--activate")
+        draft = self.write("intro.md", "혁신적인 지갑을 소개합니다.\n혁신적인 게임 체인저 지갑입니다.\n")
+        out = self.lint(draft)
+        self.assertNotIn("intro.md:1", out)
+        self.assertIn("intro.md:2", out)  # '게임 체인저'는 keep 규칙에 없으므로 그대로 경고한다
+
+    def test_team_rules_found_from_subfolder(self) -> None:
+        repo = self.dir / "repo"
+        (repo / ".git").mkdir(parents=True)
+        (repo / "docs").mkdir()
+        self.rules("add", "keep", "온체인", "--project", "--activate", cwd=repo / "docs")
+        saved = json.loads((repo / ".ko-tone" / "rules.json").read_text(encoding="utf-8"))
+        self.assertEqual(saved["rules"][0]["pattern"], "온체인")
+        listed = self.rules("list", cwd=repo).stdout
+        self.assertIn("팀", listed)
+        self.assertIn("온체인", listed)
+
+    def test_errors(self) -> None:
+        self.assertEqual(self.rules("retire", "nope").returncode, 2)
+        self.assertEqual(self.rules("add", "avoid", "re:(").returncode, 2)
 
 
 if __name__ == "__main__":
