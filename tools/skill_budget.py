@@ -28,11 +28,12 @@ SKILL = SKILL_DIR / "SKILL.md"
 REFS = SKILL_DIR / "references"
 DEV = REPO / "evals" / "ko-tone" / "dev"
 
-# rc2에서 '덜 고침'을 막는 문장(1절 둘째 항목, 5절 4번)을 더하며 SKILL.md 상한을 올렸다.
+# rc2에서 '덜 고침'을 막는 문장(1절 둘째 항목, 5절 4번)을, rc3에서 높임 유지와 1:1 메일 문단 유지
+# 문장을 더하며 SKILL.md 상한을 올렸다(사람 블라인드 판정 18승 10패 1무 뒤 진 사례에서 나온 문장).
 LIMITS = {
-    "SKILL.md 본문": 7000,
-    "SKILL.md C(4절 제외)": 6200,
-    "SKILL.md 핵심(4·6절 제외)": 5500,
+    "SKILL.md 본문": 7400,
+    "SKILL.md C(4절 제외)": 6600,
+    "SKILL.md 핵심(4·6절 제외)": 5900,
     "patterns.md": 6000,
     "style-principles.md": 6000,
     "user-rules.md": 3500,
