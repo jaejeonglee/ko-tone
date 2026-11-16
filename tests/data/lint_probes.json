@@ -1,0 +1,149 @@
+{
+ "설명": "ko_tone_lint.py 오탐 회귀용 문장. 저장소 작성자가 감사 때 새로 지은 문장이다(평가 사례·외부 글 발췌 없음).",
+ "probes": [
+  {
+   "expect": "pass",
+   "target": "전문가",
+   "text": "저는 보안 전문가이자 두 아이의 아빠입니다.",
+   "scope": "자기소개"
+  },
+  {
+   "expect": "pass",
+   "target": "시대 배경",
+   "text": "오늘날 대부분의 브라우저는 이 기능을 지원합니다.",
+   "scope": "기술 글"
+  },
+  {
+   "expect": "pass",
+   "target": "시대 배경",
+   "text": "이 과제는 4차 산업혁명위원회가 2019년에 발표한 권고안을 따랐습니다.",
+   "scope": "보고"
+  },
+  {
+   "expect": "pass",
+   "target": "중요",
+   "text": "이 글은 테스트의 중요성을 다룹니다.",
+   "scope": "블로그"
+  },
+  {
+   "expect": "pass",
+   "target": "결말",
+   "text": "이 실험은 상온에서도 동작할 가능성을 보여 줍니다.",
+   "scope": "논문 요약"
+  },
+  {
+   "expect": "pass",
+   "target": "사용자 반응",
+   "text": "일부 고객이 배송 지연에 불만족을 표시했습니다.",
+   "scope": "보고"
+  },
+  {
+   "expect": "pass",
+   "target": "질문형",
+   "text": "그럼 내일 3시에 회의실에서 볼까요?",
+   "scope": "메신저"
+  },
+  {
+   "expect": "pass",
+   "target": "질문형",
+   "text": "그럼 제가 예약할까요?",
+   "scope": "메신저"
+  },
+  {
+   "expect": "pass",
+   "target": "완충",
+   "text": "내일 오전까지는 보내 드릴 수 있을 것 같습니다.",
+   "scope": "메일"
+  },
+  {
+   "expect": "pass",
+   "target": "완충",
+   "text": "이번 주말에는 비가 올 것으로 예상됩니다.",
+   "scope": "안내"
+  },
+  {
+   "expect": "pass",
+   "target": "챗봇",
+   "text": "궁금한 점이 있으시면 고객센터(1588-0000)로 문의해 주세요.",
+   "scope": "공지"
+  },
+  {
+   "expect": "pass",
+   "target": "챗봇",
+   "text": "일정이 바뀌면 언제든 말씀해 주세요.",
+   "scope": "메일"
+  },
+  {
+   "expect": "pass",
+   "target": "챗봇",
+   "text": "물론입니다. 내일까지 보내겠습니다.",
+   "scope": "메신저 답장"
+  },
+  {
+   "expect": "pass",
+   "target": "조사 병기",
+   "text": "{name}을(를) 삭제할까요?",
+   "scope": "UI 문구(변수)"
+  },
+  {
+   "expect": "pass",
+   "target": "조사 병기",
+   "text": "`{token}`을(를) 받았어요.",
+   "scope": "UI 문구(변수)"
+  },
+  {
+   "expect": "pass",
+   "target": "~를 통해 한 번",
+   "text": "신청은 앱을 통해서만 받습니다.",
+   "scope": "공지"
+  },
+  {
+   "expect": "pass",
+   "target": "~를 통해 한 번",
+   "text": "이메일을 통해 결과를 알려 드리겠습니다.",
+   "scope": "메일"
+  },
+  {
+   "expect": "pass",
+   "target": "콜론 제목(형식 문서)",
+   "text": "## 부록: 설치 방법",
+   "scope": "doc"
+  },
+  {
+   "expect": "pass",
+   "target": "콜론 제목(형식 문서)",
+   "text": "## 2026-11-12: 3.2.0 배포",
+   "scope": "release"
+  },
+  {
+   "expect": "pass",
+   "target": "이모지(SNS)",
+   "text": "✅ 오늘 할 일 끝!",
+   "scope": "sns"
+  },
+  {
+   "expect": "info",
+   "target": "에 의해",
+   "text": "이 정보는 개인정보 보호법에 의해 보호됩니다.",
+   "scope": "약관·공지"
+  },
+  {
+   "expect": "warn",
+   "target": "완충 겹침",
+   "text": "수수료가 줄어들 수 있을 것으로 보입니다.",
+   "scope": "보고"
+  },
+  {
+   "expect": "warn",
+   "target": "조사 병기",
+   "text": "회원 등급(으)로 나뉩니다.",
+   "scope": "공지"
+  },
+  {
+   "expect": "warn",
+   "target": "이중 피동",
+   "text": "업데이트가 완료되어졌습니다.",
+   "scope": "공지"
+  }
+ ]
+}
