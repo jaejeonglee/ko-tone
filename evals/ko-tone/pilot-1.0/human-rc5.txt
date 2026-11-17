@@ -1,0 +1,9 @@
+ko-tone 블라인드 비교 결과 (rc5, 자주 진 8건만)
+1. [new-food-qa-cover-letter] 자기소개서 문항 답변(직무 경험): ko-tone 쪽 / 이유: 더 자연스럽다
+2. [new-groom-friend-wedding-speech] 결혼식 축사(신랑 친구 대표): 스킬 없는 쪽 / 이유: 구성이 읽기 쉽다
+3. [new-jeju-kid-travel-blog] 육아 블로그 여행 후기: 비슷함 / 메모: 솔직히 원문이 낫다.
+4. [new-shop-delivery-delay-reply] 쇼핑몰 고객 문의 답변(배송 지연 사과): ko-tone 쪽 / 이유: 더 자연스럽다
+5. [new-team-lead-messenger] 팀장에게 보내는 사내 메신저(반차 보고): ko-tone 쪽 / 이유: 더 자연스럽다
+6. [new-vendor-delivery-delay-mail] 거래처 업무 메일(납품 일정 변경 안내): 스킬 없는 쪽 / 이유: 더 자연스럽다
+7. [dev06-partner-email] 파트너사 업무 메일: ko-tone 쪽 / 이유: 말투가 상황에 맞다
+8. [dev15-slack-deploy-internal] 사내 배포 공지: 스킬 없는 쪽 / 이유: 구성이 읽기 쉽다

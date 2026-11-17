@@ -1,0 +1,16 @@
+ko-tone 블라인드 재비교 결과 (rc3)
+1. [new-food-qa-cover-letter] 자기소개서 문항 답변(직무 경험): 스킬 없는 쪽 / 이유: 더 자연스럽다, 구성이 읽기 쉽다
+2. [new-groom-friend-wedding-speech] 결혼식 축사(신랑 친구 대표): 스킬 없는 쪽 / 이유: 구성이 읽기 쉽다
+3. [new-jeju-kid-travel-blog] 육아 블로그 여행 후기: 비슷함 / 메모: a는 구성이 깔끔하게 되어있는데 말투가 ai스럽고 b는 말투가 적절한데 청자들이 궁금한게 한눈에 안들어오네  (A=스킬 없음, B=rc3)
+4. [new-professor-extension-mail] 교수님께 보내는 메일(제출 기한 연장 요청): ko-tone 쪽 / 이유: 말투가 상황에 맞다
+5. [new-school-field-trip-notice] 초등학교 가정통신문(현장체험학습 안내): ko-tone 쪽 / 이유: 말투가 상황에 맞다
+6. [new-shop-delivery-delay-reply] 쇼핑몰 고객 문의 답변(배송 지연 사과): 스킬 없는 쪽 / 이유: 말투가 상황에 맞다
+7. [new-team-lead-messenger] 팀장에게 보내는 사내 메신저(반차 보고): 스킬 없는 쪽 / 이유: 말투가 상황에 맞다
+8. [new-vendor-delivery-delay-mail] 거래처 업무 메일(납품 일정 변경 안내): 스킬 없는 쪽 / 이유: 말투가 상황에 맞다
+9. [dev05-weekly-report-bullets] 주간 업무 보고 (개조식): ko-tone 쪽 / 이유: 더 자연스럽다
+10. [dev06-partner-email] 파트너사 업무 메일: 스킬 없는 쪽 / 이유: 군더더기가 적다
+11. [dev08-discord-token-migration] 커뮤니티 토큰 전환 공지: 스킬 없는 쪽 / 이유: 구성이 읽기 쉽다
+12. [dev11-release-notes] 릴리스 노트: 비슷함
+13. [dev15-slack-deploy-internal] 사내 배포 공지: ko-tone 쪽 / 이유: 말투가 상황에 맞다
+14. [dev18-security-incident-public] 대외 보안 사고 안내: 스킬 없는 쪽 / 이유: 말투가 상황에 맞다, 구성이 읽기 쉽다
+15. [dev19-meeting-notes] 회의록: ko-tone 쪽 / 이유: 구성이 읽기 쉽다

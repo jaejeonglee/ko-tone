@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "ko-tone",
   "description": "AI가 쓴 한국어 글을 사람이 쓴 것처럼 다듬는 Agent Skill. 글이 놓인 상황(메일, 메신저, 공지, 블로그, 홍보, 일기)을 먼저 읽고 고친 뒤, 수치·날짜·이름 같은 사실을 원문과 대조한다. Polishes AI-drafted Korean text while checking facts against the original.",
-  "version": "1.0.0-rc6",
+  "version": "1.0.0",
   "author": {
     "name": "jaejeonglee",
     "url": "https://github.com/jaejeonglee"

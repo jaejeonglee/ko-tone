@@ -1,0 +1,30 @@
+ko-tone 블라인드 비교 결과 (1.0-rc)
+1. [new-apt-water-notice] 아파트 관리사무소 단수 안내문: ko-tone 쪽
+2. [new-bakery-job-posting] 채용 공고(동네 베이커리 제빵 보조): ko-tone 쪽
+3. [new-cafe-winter-sns] 소상공인 SNS 홍보 글(카페 인스타그램): ko-tone 쪽
+4. [new-factory-quality-minutes] 사내 회의록(제조 품질 회의): ko-tone 쪽
+5. [new-food-qa-cover-letter] 자기소개서 문항 답변(직무 경험): 스킬 없는 쪽
+6. [new-groom-friend-wedding-speech] 결혼식 축사(신랑 친구 대표): ko-tone 쪽 / 이유: 말투가 상황에 맞다
+7. [new-jeju-kid-travel-blog] 육아 블로그 여행 후기: ko-tone 쪽 / 이유: 구성이 읽기 쉽다
+8. [new-professor-extension-mail] 교수님께 보내는 메일(제출 기한 연장 요청): 스킬 없는 쪽 / 이유: 구성이 읽기 쉽다
+9. [new-school-field-trip-notice] 초등학교 가정통신문(현장체험학습 안내): ko-tone 쪽 / 이유: 말투가 상황에 맞다
+10. [new-shop-delivery-delay-reply] 쇼핑몰 고객 문의 답변(배송 지연 사과): 스킬 없는 쪽 / 이유: 말투가 상황에 맞다, 더 자연스럽다
+11. [new-team-lead-messenger] 팀장에게 보내는 사내 메신저(반차 보고): 스킬 없는 쪽 / 이유: 말투가 상황에 맞다
+12. [new-vendor-delivery-delay-mail] 거래처 업무 메일(납품 일정 변경 안내): 스킬 없는 쪽 / 이유: 말투가 상황에 맞다, 더 자연스럽다
+13. [dev05-weekly-report-bullets] 주간 업무 보고 (개조식): ko-tone 쪽 / 이유: 구성이 읽기 쉽다
+14. [dev06-partner-email] 파트너사 업무 메일: 스킬 없는 쪽 / 이유: 말투가 상황에 맞다, 더 자연스럽다
+15. [dev07-pr-description] PR 설명: ko-tone 쪽 / 이유: 사실·정보가 정확하다, 구성이 읽기 쉽다
+16. [dev08-discord-token-migration] 커뮤니티 토큰 전환 공지: 스킬 없는 쪽 / 이유: 말투가 상황에 맞다, 구성이 읽기 쉽다
+17. [dev09-translated-article-polish] 번역 기술 글: ko-tone 쪽 / 이유: 구성이 읽기 쉽다
+18. [dev10-incident-report] 내부 장애 보고: ko-tone 쪽 / 이유: 더 자연스럽다
+19. [dev11-release-notes] 릴리스 노트: 스킬 없는 쪽 / 이유: 군더더기가 적다
+20. [dev12-airdrop-notice] 보상 지급 공지: ko-tone 쪽 / 이유: 더 자연스럽다, 군더더기가 적다
+21. [dev13-dapp-error-messages] 앱 오류 메시지: 비슷함 / 메모: 둘다 별론데.
+22. [dev14-tech-blog-retro] 기술 블로그 회고: ko-tone 쪽 / 이유: 군더더기가 적다
+23. [dev15-slack-deploy-internal] 사내 배포 공지: 스킬 없는 쪽 / 이유: 구성이 읽기 쉽다 / 메모: 둘다 말투가 일단 해요체인게 별론데.
+24. [dev16-investor-update-email] 투자자 월간 업데이트 메일: ko-tone 쪽 / 이유: 더 자연스럽다
+25. [dev17-dao-governance-notice] 투표 공지: ko-tone 쪽 / 이유: 구성이 읽기 쉽다
+26. [dev18-security-incident-public] 대외 보안 사고 안내: ko-tone 쪽 / 이유: 구성이 읽기 쉽다
+27. [dev19-meeting-notes] 회의록: 스킬 없는 쪽 / 이유: 구성이 읽기 쉽다
+28. [promo-plain] X 홍보 글 (다듬기): ko-tone 쪽
+29. [promo-shorten] X 홍보 글 (줄이기): ko-tone 쪽
