@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace-manifest.json",
+  "name": "ko-tone",
+  "owner": {
+    "name": "jaejeonglee",
+    "url": "https://github.com/jaejeonglee"
+  },
+  "description": "Claude Code 플러그인으로 설치할 수 있는 ko-tone 스킬.",
+  "plugins": [
+    {
+      "name": "ko-tone",
+      "source": "./",
+      "description": "AI가 쓴 한국어 글을 사람이 쓴 것처럼 다듬는 Agent Skill. 글이 놓인 상황(메일, 메신저, 공지, 블로그, 홍보, 일기)을 먼저 읽고 고친 뒤, 수치·날짜·이름 같은 사실을 원문과 대조한다. Polishes AI-drafted Korean text while checking facts against the original.",
+      "license": "MIT",
+      "keywords": [
+        "writing",
+        "editing",
+        "korean",
+        "한국어",
+        "humanize",
+        "proofreading",
+        "style"
+      ]
+    }
+  ]
+}

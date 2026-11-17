@@ -15,11 +15,10 @@ AI가 쓴 한국어 글에서 'AI 티'와 번역투, 빈말을 걷어내는 Agen
 ## 설치
 
 - **claude.ai, Claude 데스크톱 앱:** [Releases](https://github.com/jaejeonglee/ko-tone/releases)에서 `ko-tone.zip`을 받아 Customize → Skills → `+` → Create skill → Upload a skill에 올립니다. GitHub의 "Download ZIP"으로 받은 파일은 폴더가 한 겹 더 있어서 인식되지 않습니다.
-- **Claude Code:**
+- **Claude Code:** 플러그인으로 설치합니다. 플러그인을 쓰지 않으려면 `skills/ko-tone` 폴더를 `~/.claude/skills/`에 복사합니다.
 
-  ```bash
-  git clone https://github.com/jaejeonglee/ko-tone.git
-  cp -R ko-tone/skills/ko-tone ~/.claude/skills/ko-tone
+  ```
+  /plugin install ko-tone --marketplace jaejeonglee/ko-tone
   ```
 
 - **다른 Agent:** "이 Skill을 설치해 줘: https://github.com/jaejeonglee/ko-tone"이라고 요청합니다.

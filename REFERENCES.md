@@ -26,6 +26,7 @@
 - 토스, 「좋은 에러 메시지를 만드는 6가지 원칙」(2022). https://toss.tech/article/how-to-write-error-message
 - 토스 앱인토스 개발자센터, UI/UX 가이드: UX 라이팅. https://developers-apps-in-toss.toss.im/design/consumer-ux-guide
 - 카카오엔터프라이즈, 「개발자를 위한 테크니컬 라이팅 10계명」(원문 삭제, 항목 이름 수준만 참고).
+- IsaacEryn, humanizer-ko (MIT). https://github.com/IsaacEryn/humanizer-ko: 문체 샘플 따르기, 밀도 기준, 발표 대본의 끝말 섞기, 임베디드·파일 모드의 착안점만 참고했고 문구와 예시는 옮기지 않았습니다.
 
 ## 단행본·논문 (서지 정보만)
 
