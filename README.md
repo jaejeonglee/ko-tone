@@ -2,7 +2,7 @@
   <img src="./assets/readme/hero.png" width="100%" alt="ko-tone 배너. 원고지 위에서 '검토를 진행했습니다'의 '를 진행'과 '앞으로가 기대됩니다' 한 줄을 빨간 펜으로 지운 교정 예시">
 </p>
 
-AI가 쓴 한국어 글에서 'AI 티'와 번역투, 빈말을 걷어내는 Agent Skill입니다. 블로그, 이메일, 번역 글, 제품 화면 문구처럼 어조와 문장이 중요한 글에 맞춰져 있고, 국립국어원·Microsoft·토스의 공개 글쓰기 지침을 바탕으로 고칩니다. 수치, 이름, 코드 같은 사실은 바꾸지 않습니다.
+AI가 쓴 한국어 글에서 'AI 티'와 번역투, 빈말을 걷어내는 Agent Skill입니다. 메일, 메신저, 공지, 회의록, 블로그, 자기소개서까지 글 종류를 가리지 않고, 국립국어원·Microsoft·토스의 공개 글쓰기 지침을 바탕으로 고칩니다. 수치, 날짜, 이름 같은 사실은 원문과 대조해 지킵니다.
 
 ## 결과 예시
 
@@ -26,7 +26,7 @@ AI가 쓴 한국어 글에서 'AI 티'와 번역투, 빈말을 걷어내는 Agen
 
 ## 사용
 
-"AI 티 빼줘", "자연스럽게 다듬어줘", "번역투 고쳐줘"처럼 요청하면 실행됩니다. 공지나 보고서처럼 형식이 핵심인 문서에는 자동으로 실행되지 않으며, "ko-tone으로"를 붙여 요청하면 구성은 두고 문장만 다듬습니다.
+"AI 티 빼줘", "자연스럽게 다듬어줘", "번역투 고쳐줘", "읽기 좋게 고쳐줘"처럼 요청하면 실행됩니다. Claude가 평소대로 고친 글 위에 원문 사실 대조와 한국어 점검을 얹는 방식이라, 구성과 형식은 글 종류에 맞게 Claude가 정하고 틀린 요일이나 바뀐 수치는 본문에서 바로잡아 알려 줍니다. "문장만", "말투만", "줄여줘"처럼 손댈 범위를 말하면 그 안에서만 고칩니다.
 
 ## 피드백 학습
 
@@ -39,10 +39,9 @@ AI가 쓴 한국어 글에서 'AI 티'와 번역투, 빈말을 걷어내는 Agen
 Agent가 필요할 때 쓰는 선택 도구입니다. Python 3.9 이상의 표준 라이브러리만 씁니다.
 
 ```bash
-python3 skills/ko-tone/scripts/ko_tone_compare.py original.md revised.md  # 원문과 고친 글의 수치·링크·코드 비교
-python3 skills/ko-tone/scripts/ko_tone_facts.py weekday 2026-12-02        # 요일, 시간대, 증감률, 주소 체크섬 계산
-python3 skills/ko-tone/scripts/ko_tone_lint.py draft.md                    # 상투 표현과 내 규칙 위반 후보 찾기
-python3 skills/ko-tone/scripts/ko_tone_rules.py list --status all          # 쌓인 내 규칙 보기
+python3 skills/ko-tone/scripts/ko_tone_check.py original.md revised.md  # 원문과 고친 글의 값·요일·환산·내 규칙 대조
+python3 skills/ko-tone/scripts/ko_tone_facts.py weekday 2026-12-02      # 요일, 시간대, 증감률 계산
+python3 skills/ko-tone/scripts/ko_tone_rules.py list --status all        # 쌓인 내 규칙 보기
 ```
 
 ## 참고
